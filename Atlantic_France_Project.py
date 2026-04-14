@@ -40,7 +40,7 @@ sns.barplot(x=popularity_comparison.index, y=popularity_comparison.values, palet
 plt.title('Average Popularity of Explicit vs Clean Tracks', fontsize=14)
 plt.xlabel('Is Explicit?', fontsize=12)
 plt.ylabel('Average Popularity Score', fontsize=12)
-plt.xtricks([0, 1], ['Clean', 'Explicit'])
+plt.xticks([0, 1], ['Clean', 'Explicit'])
 
 plt.show()
 
