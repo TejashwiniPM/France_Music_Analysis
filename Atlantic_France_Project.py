@@ -1,6 +1,8 @@
 import pandas  as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import streamlit as st
+st.title("Hello, Streamlit!")
 
 #Loading the dataset  
 df  = pd.read_csv('Atlantic_France.csv')
