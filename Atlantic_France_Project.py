@@ -10,10 +10,10 @@ st.title("🎵 Atlantic France Music Dashboard")
 df = pd.read_csv('Atlantic_France.csv')
 
 #Data Cleaning and Preprocessing
-df['song'] = df['song'].fillna('Unknown')
-df['duration_min'] = df['duration_ms'] / 60000
-df['date'] = pd.to_datetime(df['date'], dayfirst=True, errors='coerce')
-df['album_type'] = df['album_type'].str.lower()
+df['song'] = df['Song'].fillna('Unknown')
+df['duration_min'] = df['Duration_ms'] / 60000
+df['date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce')
+df['album_type'] = df['Album_type'].str.lower()
 
 #Data Preview
 st.subheader("📊 Dataset Preview")
@@ -22,7 +22,7 @@ st.dataframe(df.head())
 #Data Analysis
 st.subheader("🎯 Explicit vs Clean Content")
 
-explicit_counts = df['is_explicit'].value_counts(normalize=True) * 100
+explicit_counts = df['Is_explicit'].value_counts(normalize=True) * 100
 
 col1, col2 = st.columns(2)
 
@@ -35,7 +35,7 @@ with col2:
 # Popularity Comparison
 st.subheader("📈 Popularity Comparison")
 
-popularity_comparison = df.groupby('is_explicit')['popularity'].mean()
+popularity_comparison = df.groupby('Is_explicit')['Popularity'].mean()
 
 col1, col2 = st.columns(2)
 
