@@ -1,0 +1,5 @@
+pandas
+strealit
+plotly
+seaborn
+matplotlib
