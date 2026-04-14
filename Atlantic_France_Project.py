@@ -3,14 +3,14 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# -------------------- PAGE CONFIG --------------------
+#Page configuration
 st.set_page_config(
     page_title="Atlantic France Dashboard",
     layout="wide",
     page_icon="🎵"
 )
 
-# -------------------- CUSTOM CSS --------------------
+#CSS for premium look
 st.markdown("""
 <style>
 body {
@@ -29,22 +29,22 @@ h1, h2, h3 {
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------- TITLE --------------------
+#Title with custom styling
 st.markdown(
     "<h1 style='text-align: center; color: #00C853;'>🎵 Atlantic France Music Analytics</h1>",
     unsafe_allow_html=True
 )
 
-# -------------------- LOAD DATA --------------------
+#Loading the Data
 df = pd.read_csv('Atlantic_France.csv')
 
-# -------------------- DATA CLEANING --------------------
+#Data Cleaning
 df['song'] = df['Song'].fillna('Unknown')
 df['duration_min'] = df['Duration_ms'] / 60000
 df['date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce')
 df['album_type'] = df['Album_type'].str.lower()
 
-# -------------------- SIDEBAR --------------------
+#Sidebar filters
 st.sidebar.header("🔍 Filters")
 
 rank_filter = st.sidebar.selectbox("Rank Tier", ["Top 10", "Top 25", "Top 50"])
@@ -60,7 +60,7 @@ if explicit_filter == "Explicit":
 elif explicit_filter == "Clean":
     df = df[df['Is_explicit'] == False]
 
-# -------------------- KPIs --------------------
+#KPIs
 explicit_share = df['Is_explicit'].mean() * 100
 clean_ratio = (df['Is_explicit'] == False).sum() / max((df['Is_explicit'] == True).sum(), 1)
 avg_duration = df['duration_min'].mean()
@@ -78,7 +78,7 @@ col4.metric("⭐ Acceptance Score", f"{acceptance_score:.2f}")
 
 st.markdown("---")
 
-# -------------------- TABS --------------------
+#Tabs for detailed analysis
 tab1, tab2, tab3, tab4 = st.tabs([
     "🎯 Content Analysis",
     "💿 Format Analysis",
@@ -86,7 +86,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "📀 Album Impact"
 ])
 
-# -------------------- TAB 1 --------------------
+#Tab 1: Explicit vs Clean Popularity
 with tab1:
     st.subheader("Explicit vs Clean Popularity")
 
@@ -102,7 +102,7 @@ with tab1:
     ax1.set_title("Popularity Comparison")
     st.pyplot(fig1)
 
-# -------------------- TAB 2 --------------------
+#Tab 2: Album vs Single Distribution
 with tab2:
     st.subheader("Album vs Single Distribution")
 
@@ -115,7 +115,7 @@ with tab2:
     )
     st.pyplot(fig2)
 
-# -------------------- TAB 3 --------------------
+#Tab 3: Song Duration Distribution
 with tab3:
     st.subheader("Song Duration Distribution")
 
@@ -129,7 +129,7 @@ with tab3:
     )
     st.pyplot(fig3)
 
-# -------------------- TAB 4 --------------------
+#Tab 4: Album Size vs Popularity
 with tab4:
     st.subheader("Album Size vs Popularity")
 
@@ -146,7 +146,7 @@ with tab4:
     )
     st.pyplot(fig4)
 
-# -------------------- INSIGHTS --------------------
+#Insights and Recommendations
 st.markdown("---")
 st.subheader("🧠 Key Insights")
 
@@ -159,6 +159,6 @@ if avg_duration >= 2.5 and avg_duration <= 4:
 if df['Total_tracks'].corr(df['Popularity']) < 0:
     st.warning("⚠ Larger albums may dilute performance")
 
-# -------------------- FOOTER --------------------
+#Final notes
 st.markdown("---")
 st.caption("🚀 Built by Tejashwini | Atlantic France Music Analytics")
