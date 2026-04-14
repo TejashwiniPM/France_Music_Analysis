@@ -1,48 +1,69 @@
-import pandas  as pd
+import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
-st.title("Hello, Streamlit!")
 
-#Loading the dataset  
-df  = pd.read_csv('Atlantic_France.csv')
+#Title of the dashboard
+st.title("🎵 Atlantic France Music Dashboard")
 
-#Analytics 1: Handling the misssing values.
+#Loading the dataset
+df = pd.read_csv('Atlantic_France.csv')
+
+#Data Cleaning and Preprocessing
 df['song'] = df['song'].fillna('Unknown')
-
-#Analytics 2:  Convert time.
 df['duration_min'] = df['duration_ms'] / 60000
-
-#Analytics 3:  Date Parsing
-df['date'] = pd.to_datetime(df['date'], dayfirst=True)
-
-#Analytics 4:  Standardize Labels
+df['date'] = pd.to_datetime(df['date'], dayfirst=True, errors='coerce')
 df['album_type'] = df['album_type'].str.lower()
 
-#Calculating the % of Explicit vs Clean tracks
+#Data Preview
+st.subheader("📊 Dataset Preview")
+st.dataframe(df.head())
+
+#Data Analysis
+st.subheader("🎯 Explicit vs Clean Content")
+
 explicit_counts = df['is_explicit'].value_counts(normalize=True) * 100
-print("Explicit Content Share:")
-print(f"Explicit: {explicit_counts[True]:.2f}%")
-print(f"Clean: {explicit_counts[False]:.2f}%")
 
-#Compare average popularity scores
+col1, col2 = st.columns(2)
+
+with col1:
+    st.metric("Explicit %", f"{explicit_counts.get(True, 0):.2f}%")
+
+with col2:
+    st.metric("Clean %", f"{explicit_counts.get(False, 0):.2f}%")
+
+# Popularity Comparison
+st.subheader("📈 Popularity Comparison")
+
 popularity_comparison = df.groupby('is_explicit')['popularity'].mean()
-print("\nAverage Popularity Comparison:")
-print(f"Average Popularity (Explicit): {popularity_comparison[True]:.1f}")
-print(f"Average Popularity (): {popularity_comparison[False]:.1f}")
 
-#Setting the style
+col1, col2 = st.columns(2)
+
+with col1:
+    st.write(f"**Explicit:** {popularity_comparison.get(True, 0):.1f}")
+
+with col2:
+    st.write(f"**Clean:** {popularity_comparison.get(False, 0):.1f}")
+
+#Data Visualization
+st.subheader("📊 Average Popularity Chart")
+
 sns.set_theme(style="whitegrid")
 
-#Plot creation
-plt.figure(figsize=(8, 6))
-sns.barplot(x=popularity_comparison.index, y=popularity_comparison.values, palette=['#A1C9F4', '#FFB482'])
+fig, ax = plt.subplots(figsize=(8, 6))
 
-#Labels and titles
-plt.title('Average Popularity of Explicit vs Clean Tracks', fontsize=14)
-plt.xlabel('Is Explicit?', fontsize=12)
-plt.ylabel('Average Popularity Score', fontsize=12)
-plt.xticks([0, 1], ['Clean', 'Explicit'])
+sns.barplot(
+    x=['Clean', 'Explicit'],
+    y=[
+        popularity_comparison.get(False, 0),
+        popularity_comparison.get(True, 0)
+    ],
+    ax=ax
+)
 
-plt.show()
+ax.set_title('Average Popularity of Explicit vs Clean Tracks')
+ax.set_xlabel('Content Type')
+ax.set_ylabel('Average Popularity Score')
+
+st.pyplot(fig)
 
