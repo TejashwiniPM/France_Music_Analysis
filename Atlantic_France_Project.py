@@ -10,7 +10,9 @@ st.set_page_config(
     page_icon="🎵"
 )
 
-#CSS for premium look
+#Theme and styling
+sns.set_theme(style="darkgrid")
+
 st.markdown("""
 <style>
 body {
@@ -24,21 +26,21 @@ h1, h2, h3 {
     padding: 15px;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
 }
 </style>
 """, unsafe_allow_html=True)
 
-#Title with custom styling
+#Title
 st.markdown(
-    "<h1 style='text-align: center; color: #00C853;'>🎵 Atlantic France Music Analytics</h1>",
+    "<h1 style='text-align: center; color: #00E676;'>🎵 Atlantic France Music Analytics Dashboard</h1>",
     unsafe_allow_html=True
 )
 
-#Loading the Data
+#Load data
 df = pd.read_csv('Atlantic_France.csv')
 
-#Data Cleaning
+#Clean and preprocess
 df['song'] = df['Song'].fillna('Unknown')
 df['duration_min'] = df['Duration_ms'] / 60000
 df['date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce')
@@ -64,10 +66,11 @@ elif explicit_filter == "Clean":
 explicit_share = df['Is_explicit'].mean() * 100
 clean_ratio = (df['Is_explicit'] == False).sum() / max((df['Is_explicit'] == True).sum(), 1)
 avg_duration = df['duration_min'].mean()
+
 df['acceptance_score'] = df['Popularity'] / df['Position']
 acceptance_score = df['acceptance_score'].mean()
 
-st.markdown("### 📊 Key Metrics")
+st.markdown("### 📊 Key Performance Indicators")
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -92,34 +95,46 @@ with tab1:
 
     pop = df.groupby('Is_explicit')['Popularity'].mean()
 
-    fig1, ax1 = plt.subplots()
+    fig1, ax1 = plt.subplots(facecolor="#0e1117")
+
     sns.barplot(
         x=['Clean', 'Explicit'],
         y=[pop.get(False, 0), pop.get(True, 0)],
-        palette=['#00E676', '#FF1744'],
+        palette=['#00FF7F', '#FF073A'],
         ax=ax1
     )
-    ax1.set_title("Popularity Comparison")
+
+    ax1.set_facecolor("#1c1f26")
+    ax1.set_title("Popularity Comparison", color="white")
+    ax1.tick_params(colors='white')
+
     st.pyplot(fig1)
 
 #Tab 2: Album vs Single Distribution
 with tab2:
     st.subheader("Album vs Single Distribution")
 
-    fig2, ax2 = plt.subplots()
+    fig2, ax2 = plt.subplots(facecolor="#0e1117")
+
     sns.countplot(
         data=df,
         x='album_type',
-        palette='coolwarm',
+        palette='magma',
         ax=ax2
     )
+
+    ax2.set_facecolor("#1c1f26")
+    ax2.set_title("Album vs Single", color="white")
+    ax2.tick_params(colors='white')
+
     st.pyplot(fig2)
 
-#Tab 3: Song Duration Distribution
+#Tab 3: Duration Distribution
 with tab3:
     st.subheader("Song Duration Distribution")
 
-    fig3, ax3 = plt.subplots()
+    fig3, ax3 = plt.subplots(facecolor="#0e1117")
+
     sns.histplot(
         df['duration_min'],
         bins=20,
@@ -127,26 +142,37 @@ with tab3:
         color='#00BFFF',
         ax=ax3
     )
+
+    ax3.set_facecolor("#1c1f26")
+    ax3.set_title("Duration Distribution", color="white")
+    ax3.tick_params(colors='white')
+
     st.pyplot(fig3)
 
 #Tab 4: Album Size vs Popularity
 with tab4:
     st.subheader("Album Size vs Popularity")
 
-    fig4, ax4 = plt.subplots()
+    fig4, ax4 = plt.subplots(facecolor="#0e1117")
+
     sns.scatterplot(
         data=df,
         x='Total_tracks',
         y='Popularity',
         hue='Popularity',
-        palette='viridis',
+        palette='plasma',
         size='Popularity',
-        sizes=(20, 200),
+        sizes=(30, 200),
         ax=ax4
     )
+
+    ax4.set_facecolor("#1c1f26")
+    ax4.set_title("Album Size Impact", color="white")
+    ax4.tick_params(colors='white')
+
     st.pyplot(fig4)
 
-#Insights and Recommendations
+#Tab 5: Key Insights
 st.markdown("---")
 st.subheader("🧠 Key Insights")
 
@@ -154,11 +180,11 @@ if explicit_share < 30:
     st.success("✔ French audience prefers clean content")
 
 if avg_duration >= 2.5 and avg_duration <= 4:
-    st.info("ℹ Medium-duration songs perform best")
+    st.info("ℹ Medium-length songs perform best")
 
 if df['Total_tracks'].corr(df['Popularity']) < 0:
-    st.warning("⚠ Larger albums may dilute performance")
+    st.warning("⚠ Larger albums may reduce track popularity")
 
-#Final notes
+#Footer
 st.markdown("---")
-st.caption("🚀 Built by Tejashwini | Atlantic France Music Analytics")
+st.caption("🚀 Built by Tejashwini | Atlantic France Music Analytics Project")
