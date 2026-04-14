@@ -1,4 +1,4 @@
-date,position,song,artist,popularity,duration_ms,album_type,total_tracks,is_explicit,album_cover_url
+Date,Position,Song,Artist,Popularity,Duration_ms,Album_type,Total_tracks,is_explicit,Album_cover_url
 18-05-2024,1,LA RUE,No Limit & Gazo & Damso,72,225137,single,1,TRUE,https://i.scdn.co/image/ab67616d0000b27384f2454da0973c07a508b57e
 18-05-2024,2,C'est carré le S,Naps,74,201533,album,22,FALSE,https://i.scdn.co/image/ab67616d0000b27348f7c15d2c4dde71d11262e6
 18-05-2024,3,Freestyle LVL UP 1,Ninho,76,114182,single,1,TRUE,https://i.scdn.co/image/ab67616d0000b273fbe613b1c15b681dc3e84dfe
